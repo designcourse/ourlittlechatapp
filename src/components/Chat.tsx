@@ -11,7 +11,11 @@ interface Message {
   timestamp: Date;
 }
 
-export default function Chat() {
+export interface ChatProps {
+  onColorChange?: (color: string) => void;
+}
+
+export default function Chat({ onColorChange }: ChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -90,6 +94,10 @@ export default function Chat() {
               if (parsed.content) {
                 assistantContent += parsed.content;
                 setStreamingMessage(assistantContent);
+              }
+              // Handle color change
+              if (parsed.colorChange && onColorChange) {
+                onColorChange(parsed.colorChange);
               }
             } catch (e) {
               // Ignore parsing errors for malformed chunks
